@@ -1,31 +1,47 @@
-
-const form = document.querySelector("form");
+const form = document.getElementById("form");
+const usernameInput = document.getElementById("username");
+const passwordInput = document.getElementById("password");
+const checkbox = document.getElementById("checkbox");
 const existingBtn = document.getElementById("existing");
 
-if(localStorage.getItem('user')){
-	existingBtn.style.display = "block";
+// 1. Initial Check: Show/Hide the button on page load
+function checkExistingUser() {
+    if (localStorage.getItem('username') && localStorage.getItem('password')) {
+        existingBtn.style.display = "block";
+    } else {
+        existingBtn.style.display = "none";
+    }
 }
 
-form.addEventListener('submit', (e) => {
-	e.preventDefault();
-	const username = e.target.username.value;
-	const password = e.target.password.value;
-	const rememberMe = e.target.checkbox.checked;
-	if(rememberMe){
-		localStorage.setItem('user', JSON.stringify({username, password}));
-		existingBtn.style.display = "block";
-	} else {
-		localStorage.clear();
-		existingBtn.style.display = "none";
-	}
-	alert(`Logged in as ${username}`);
-	e.target.reset();
-})
+checkExistingUser();
 
+// 2. Form Submission Logic
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const username = usernameInput.value;
+    const password = passwordInput.value;
+    const isChecked = checkbox.checked;
+
+    if (isChecked) {
+        // Save individual credentials
+        localStorage.setItem('username', username);
+        localStorage.setItem('password', password);
+    } else {
+        // Remove only these specific credentials
+        localStorage.removeItem('username');
+        localStorage.removeItem('password');
+    }
+
+    alert(`Logged in as ${username}`);
+    
+    // Refresh button visibility after submission
+    checkExistingUser();
+});
+
+// 3. Existing User Login Logic
 existingBtn.addEventListener('click', () => {
-	const user = JSON.parse(localStorage.getItem('user'));
-	document.getElementById("username").value = user.username;
-	document.getElementById("password").value = user.password;
-	document.getElementById("checkbox").checked = true;
-	alert(`Logged in as ${user.username}`)
-})
+    const savedUsername = localStorage.getItem('username');
+    // The requirement only asks for the alert when clicking this button
+    alert(`Logged in as ${savedUsername}`);
+});
