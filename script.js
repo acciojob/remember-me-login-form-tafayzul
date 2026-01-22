@@ -4,47 +4,41 @@ const passwordInput = document.getElementById("password");
 const checkbox = document.getElementById("checkbox");
 const existingBtn = document.getElementById("existing");
 
-// Function to control button visibility
-function updateUI() {
+// Function to check localStorage and show/hide button
+function checkCredentials() {
     const savedName = localStorage.getItem('username');
     const savedPass = localStorage.getItem('password');
 
-    // Requirement: Only show if credentials are saved
     if (savedName && savedPass) {
-        existingBtn.style.display = "block";
+        existingBtn.style.display = "block"; // Show button
     } else {
-        existingBtn.style.display = "none";
+        existingBtn.style.display = "none";  // Hide button
     }
 }
 
-// Run immediately on page load to check localStorage
-updateUI();
+// Run immediately when page loads
+checkCredentials();
 
-// 1. Handle Form Submission
-form.addEventListener('submit', (event) => {
-    event.preventDefault(); 
+// 1. Submit Logic
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
 
-    const username = usernameInput.value;
-    const password = passwordInput.value;
+    const u = usernameInput.value;
+    const p = passwordInput.value;
 
     if (checkbox.checked) {
-        // Save credentials
-        localStorage.setItem('username', username);
-        localStorage.setItem('password', password);
+        localStorage.setItem('username', u);
+        localStorage.setItem('password', p);
     } else {
-        // Clear credentials if "Remember me" is NOT checked
         localStorage.removeItem('username');
         localStorage.removeItem('password');
     }
 
-    // Exact alert required by requirements
-    alert("Logged in as " + username);
-    
-    // Refresh button visibility
-    updateUI();
+    alert("Logged in as " + u);
+    checkCredentials(); // Update button visibility after submit
 });
 
-// 2. Handle Existing User Login Button
+// 2. Existing User Button Logic
 existingBtn.addEventListener('click', () => {
     const savedName = localStorage.getItem('username');
     if (savedName) {
