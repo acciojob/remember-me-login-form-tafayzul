@@ -4,44 +4,50 @@ const passwordInput = document.getElementById("password");
 const checkbox = document.getElementById("checkbox");
 const existingBtn = document.getElementById("existing");
 
-// 1. Initial Check: Show/Hide the button on page load
-function checkExistingUser() {
-    if (localStorage.getItem('username') && localStorage.getItem('password')) {
+// Function to control the visibility of the "Existing User" button
+function toggleExistingButton() {
+    const savedName = localStorage.getItem('username');
+    const savedPass = localStorage.getItem('password');
+
+    // Show button only if BOTH credentials exist
+    if (savedName && savedPass) {
         existingBtn.style.display = "block";
     } else {
         existingBtn.style.display = "none";
     }
 }
 
-checkExistingUser();
+// RUN ON PAGE LOAD: Ensure button state is correct immediately
+toggleExistingButton();
 
-// 2. Form Submission Logic
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
+// 1. Handle Form Submission
+form.addEventListener('submit', (event) => {
+    event.preventDefault(); // Prevent page reload
+
     const username = usernameInput.value;
     const password = passwordInput.value;
-    const isChecked = checkbox.checked;
 
-    if (isChecked) {
-        // Save individual credentials
+    if (checkbox.checked) {
+        // Save to localStorage
         localStorage.setItem('username', username);
         localStorage.setItem('password', password);
     } else {
-        // Remove only these specific credentials
+        // Remove from localStorage if unchecked
         localStorage.removeItem('username');
         localStorage.removeItem('password');
     }
 
-    alert(`Logged in as ${username}`);
-    
-    // Refresh button visibility after submission
-    checkExistingUser();
+    // Requirement: alert("Logged in as <username>")
+    alert("Logged in as " + username);
+
+    // Update button visibility after submission
+    toggleExistingButton();
 });
 
-// 3. Existing User Login Logic
+// 2. Handle Existing User Login
 existingBtn.addEventListener('click', () => {
-    const savedUsername = localStorage.getItem('username');
-    // The requirement only asks for the alert when clicking this button
-    alert(`Logged in as ${savedUsername}`);
+    const savedName = localStorage.getItem('username');
+    if (savedName) {
+        alert("Logged in as " + savedName);
+    }
 });
