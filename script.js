@@ -4,12 +4,12 @@ const passwordInput = document.getElementById("password");
 const checkbox = document.getElementById("checkbox");
 const existingBtn = document.getElementById("existing");
 
-// Function to control the visibility of the "Existing User" button
-function toggleExistingButton() {
+// Function to control button visibility
+function updateUI() {
     const savedName = localStorage.getItem('username');
     const savedPass = localStorage.getItem('password');
 
-    // Show button only if BOTH credentials exist
+    // Requirement: Only show if credentials are saved
     if (savedName && savedPass) {
         existingBtn.style.display = "block";
     } else {
@@ -17,34 +17,34 @@ function toggleExistingButton() {
     }
 }
 
-// RUN ON PAGE LOAD: Ensure button state is correct immediately
-toggleExistingButton();
+// Run immediately on page load to check localStorage
+updateUI();
 
 // 1. Handle Form Submission
 form.addEventListener('submit', (event) => {
-    event.preventDefault(); // Prevent page reload
+    event.preventDefault(); 
 
     const username = usernameInput.value;
     const password = passwordInput.value;
 
     if (checkbox.checked) {
-        // Save to localStorage
+        // Save credentials
         localStorage.setItem('username', username);
         localStorage.setItem('password', password);
     } else {
-        // Remove from localStorage if unchecked
+        // Clear credentials if "Remember me" is NOT checked
         localStorage.removeItem('username');
         localStorage.removeItem('password');
     }
 
-    // Requirement: alert("Logged in as <username>")
+    // Exact alert required by requirements
     alert("Logged in as " + username);
-
-    // Update button visibility after submission
-    toggleExistingButton();
+    
+    // Refresh button visibility
+    updateUI();
 });
 
-// 2. Handle Existing User Login
+// 2. Handle Existing User Login Button
 existingBtn.addEventListener('click', () => {
     const savedName = localStorage.getItem('username');
     if (savedName) {
